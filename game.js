@@ -128,8 +128,10 @@
     board.classList.toggle('solved', game.solved);
     $('undoButton').disabled = game.solved || !history.length;
     $('resetButton').disabled = game.solved;
+    $('hintButton').disabled = game.solved;
     $('winCard').hidden = !game.solved;
-    $('statusText').textContent = game.solved ? '완성!' : `선 ${marks.filter(m => m === LINE).length}개`;
+    $('statusText').textContent = game.solved ? '완성!' :
+      `선 ${marks.filter(m => m === LINE).length}개${game.hints ? ` · 힌트 ${game.hints}번` : ''}`;
     const best = save.best[save.difficulty];
     $('bestLabel').textContent = best ? `최고 기록 ${formatTime(best)}` : '';
     updateTimer();
@@ -150,10 +152,12 @@
       game.elapsed = elapsed();
       game.solved = true;
       const time = game.elapsed;
+      const hints = game.hints || 0;
       const prev = save.best[save.difficulty];
-      const record = !prev || time < prev;
+      const record = !hints && (!prev || time < prev); // 힌트를 쓴 판은 기록에 넣지 않음
       if (record) save.best[save.difficulty] = time;
-      $('winText').textContent = `${formatTime(time)} 만에 풀었어요.${record ? ' 최고 기록이에요! 🏅' : ''}`;
+      $('winText').textContent = `${formatTime(time)} 만에 풀었어요.` +
+        (hints ? ` 힌트 ${hints}번 사용 (최고 기록에는 들어가지 않아요)` : record ? ' 최고 기록이에요! 🏅' : '');
     }
     refresh();
     persist();
@@ -268,6 +272,7 @@
   });
   document.addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); undo(); }
+    else if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === 'h') showHint();
   });
 
   function undo() {
@@ -277,6 +282,32 @@
     refresh();
     persist();
   }
+
+  // 힌트: 틀린 곳이 있으면 빨갛게, 없으면 정답 선 하나를 그어 줌 (되돌리기 가능)
+  let flashTimer = 0;
+  function clearFlash() {
+    clearTimeout(flashTimer);
+    board.querySelectorAll('.mistake, .hinted').forEach(n => n.classList.remove('mistake', 'hinted'));
+  }
+  function showHint() {
+    if (!game || game.solved) return;
+    const hint = L.findHint(game.puzzle, game.marks);
+    if (!hint) return;
+    clearFlash();
+    game.hints = (game.hints || 0) + 1;
+    if (hint.type === 'mistakes') {
+      hint.edges.forEach(e => (game.marks[e] === LINE ? edgeEls : crossEls)[e].classList.add('mistake'));
+      toast(`틀린 곳 ${hint.edges.length}개를 빨갛게 표시했어요.`);
+      refresh();
+      persist();
+    } else {
+      edgeEls[hint.edge].classList.add('hinted');
+      toast('선 하나를 그어 드렸어요.');
+      setMark(hint.edge, LINE); // 화면 갱신·저장·완성 판정까지 함께
+    }
+    flashTimer = setTimeout(clearFlash, 4000);
+  }
+  $('hintButton').addEventListener('click', showHint);
 
   $('undoButton').addEventListener('click', undo);
   $('resetButton').addEventListener('click', () => {
@@ -325,6 +356,12 @@
     t.hidden = false;
     clearTimeout(toast.timer);
     toast.timer = setTimeout(() => { t.hidden = true; }, 2200);
+  }
+
+  // 오프라인 실행(PWA): 배포된 사이트에서만 켭니다. 개발 중엔 버전 표시가 __VERSION__ 그대로라 꺼져 있음.
+  const version = document.querySelector('meta[name="app-version"]')?.content;
+  if ('serviceWorker' in navigator && version && version !== '__VERSION__') {
+    navigator.serviceWorker.register('./sw.js').catch(e => console.warn('오프라인 기능을 켜지 못했어요.', e));
   }
 
   try {

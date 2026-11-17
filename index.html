@@ -6,7 +6,11 @@
   <meta name="theme-color" content="#0b1220" />
   <meta name="description" content="점을 이어 고리 하나를 만드는 울타리 잇기(슬리더링크) 퍼즐. 언제든 새 문제를 풀어 보세요." />
   <title>울타리 잇기 | Fence Loop</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta name="app-version" content="__VERSION__" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css?v=__VERSION__" />
 </head>
 <body>
   <main class="app">
@@ -27,6 +31,7 @@
           <li>점에서 점으로 끌면 선이 그어져요. 선 위에서 끌기 시작하면 지우개가 돼요.</li>
           <li>점과 점 사이를 누르면 ✕가 생겨요. ✕는 "여기엔 선이 없다"는 메모예요. 한 번 더 누르면 지워져요.</li>
           <li>정답은 딱 하나뿐이에요.</li>
+          <li>막히면 💡 힌트: 틀린 곳이 있으면 빨갛게 알려 주고, 없으면 선 하나를 그어 줘요. 힌트를 쓴 판은 최고 기록에 들어가지 않아요.</li>
         </ol>
       </details>
     </section>
@@ -49,9 +54,10 @@
       <div class="tools">
         <button id="undoButton" type="button" class="tool">↩️ 되돌리기</button>
         <button id="resetButton" type="button" class="tool">🧹 처음부터</button>
+        <button id="hintButton" type="button" class="tool">💡 힌트</button>
         <button id="newButton" type="button" class="tool">🎲 새 문제</button>
       </div>
-      <p class="keys-hint">마우스: 점에서 점으로 끌기 = 선 긋기(선 위에서 시작하면 지우기) · 클릭 = ✕/지우기 · 키보드: 방향키 이동 · Space 선 · X ✕ · Ctrl+Z 되돌리기</p>
+      <p class="keys-hint">마우스: 점에서 점으로 끌기 = 선 긋기(선 위에서 시작하면 지우기) · 클릭 = ✕/지우기 · 키보드: 방향키 이동 · Space 선 · X ✕ · H 힌트 · Ctrl+Z 되돌리기</p>
     </section>
 
     <section id="winCard" class="win-card" hidden aria-live="polite">
@@ -66,7 +72,7 @@
 
   <div id="toast" class="toast" role="status" hidden></div>
 
-  <script src="./logic.js"></script>
-  <script src="./game.js"></script>
+  <script src="./logic.js?v=__VERSION__"></script>
+  <script src="./game.js?v=__VERSION__"></script>
 </body>
 </html>

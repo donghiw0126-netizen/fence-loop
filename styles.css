@@ -114,6 +114,12 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .cross.on { opacity: 1; }
 .cursor { fill: none; stroke: #fff; stroke-width: 2; opacity: 0; }
 .board:focus-visible .cursor { opacity: .9; }
+/* 힌트: 틀린 곳은 빨갛게, 새로 그어 준 선은 반짝 */
+.edge.mistake, .cross.mistake { stroke: var(--bad); animation: blink .5s ease-in-out 4 alternate; }
+.cross.mistake { stroke-width: 4; }
+.edge.hinted { animation: blink .4s ease-in-out 4 alternate; }
+@keyframes blink { from { opacity: 1; } to { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .edge.mistake, .cross.mistake, .edge.hinted { animation: none; } }
 .board.solved { cursor: default; }
 .board.solved .edge.on { stroke: var(--good); }
 .board.solved .cross { opacity: 0; }
@@ -121,18 +127,19 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 /* ── 도구 ─────────────────────────────────────── */
 .tools {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
   width: min(100%, 480px);
   margin: 14px auto 0;
 }
 .tool {
   min-height: 44px;
+  padding: 4px 2px;
   border: 1px solid var(--card-border);
   border-radius: 12px;
   background: transparent;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 .tool:disabled { opacity: .4; cursor: default; }

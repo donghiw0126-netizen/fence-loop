@@ -56,3 +56,46 @@ test('판정: 고리 두 개, 갈라진 선, 선 하나 빠짐은 정답이 아�
   wrongClue.clues[0] = 3;
   assert.ok(!L.checkWin(wrongClue, one), '숫자와 안 맞음');
 });
+
+test('힌트: 틀린 곳이 있으면 모두 알려 주고, 없으면 그은 선에 이어지는 정답 선을 준다', () => {
+  const p = L.generatePuzzle(3, 'easy');
+  const g = L.geometry(p.rows, p.cols);
+  const empty = new Array(g.E).fill(0);
+
+  // 아무것도 안 그었을 때: 정답 선 하나
+  const first = L.findHint(p, empty);
+  assert.equal(first.type, 'line');
+  assert.equal(p.solution[first.edge], 1);
+
+  // 틀린 선 하나 + 틀린 ✕ 하나 → 둘 다 알려 줌
+  const marks = empty.slice();
+  const offEdge = p.solution.findIndex(v => !v);
+  const onEdge = p.solution.findIndex(v => v);
+  marks[offEdge] = 1;
+  marks[onEdge] = 2;
+  assert.deepEqual(L.findHint(p, marks), { type: 'mistakes', edges: [offEdge, onEdge].sort((a, b) => a - b) });
+
+  // 맞는 ✕ 는 틀린 곳이 아님
+  const okCross = empty.slice();
+  okCross[offEdge] = 2;
+  assert.equal(L.findHint(p, okCross).type, 'line');
+
+  // 정답 선 하나를 그어 두면 다음 힌트는 그 선에 이어지는 선
+  const one = empty.slice();
+  one[onEdge] = 1;
+  const next = L.findHint(p, one);
+  assert.equal(next.type, 'line');
+  const touches = g.edgeVerts[next.edge].some(v => g.edgeVerts[onEdge].includes(v));
+  assert.ok(touches, '이미 그은 선과 이어진 선이어야 함');
+
+  // 힌트만 계속 따라가면 완성되고, 그다음엔 줄 힌트가 없음
+  const auto = empty.slice();
+  for (let i = 0; i < g.E; i++) {
+    const h = L.findHint(p, auto);
+    if (!h) break;
+    assert.equal(h.type, 'line');
+    auto[h.edge] = 1;
+  }
+  assert.ok(L.checkWin(p, auto));
+  assert.equal(L.findHint(p, auto), null);
+});

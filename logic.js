@@ -327,5 +327,28 @@
     return isValidLoop(geometry(puzzle.rows, puzzle.cols), puzzle.clues, lines);
   }
 
-  return { DIFFICULTIES, DIFFICULTY_IDS, geometry, generatePuzzle, countSolutions, checkWin, makeRng };
+  // 힌트: 틀린 표시가 있으면 그 변들을, 없으면 아직 안 그은 정답 선 하나를 알려 줍니다.
+  // marks: 0 빈칸, 1 선, 2 ✕
+  // 돌려주는 값: { type: 'mistakes', edges: [...] } | { type: 'line', edge } | null (더 알려 줄 게 없음)
+  function findHint(puzzle, marks) {
+    const g = geometry(puzzle.rows, puzzle.cols);
+    const sol = puzzle.solution;
+    const wrong = [];
+    for (let e = 0; e < g.E; e++) {
+      if ((marks[e] === 1 && !sol[e]) || (marks[e] === 2 && sol[e])) wrong.push(e);
+    }
+    if (wrong.length) return { type: 'mistakes', edges: wrong };
+    // 이미 그은 선에 이어지는 선을 먼저 (엉뚱한 곳보다 덜 헷갈림), 그다음 큰 숫자 옆
+    let best = -1, bestScore = -1;
+    for (let e = 0; e < g.E; e++) {
+      if (!sol[e] || marks[e] === 1) continue;
+      let score = 0; // 그은 선과 닿은 끝 하나당 10점 + 옆 칸의 가장 큰 숫자(0~3)
+      for (const v of g.edgeVerts[e]) if (g.vertEdges[v].some(x => marks[x] === 1)) score += 10;
+      score += Math.max(0, ...g.edgeCells[e].map(c => (c >= 0 ? puzzle.clues[c] : 0)));
+      if (score > bestScore) { best = e; bestScore = score; }
+    }
+    return best >= 0 ? { type: 'line', edge: best } : null;
+  }
+
+  return { DIFFICULTIES, DIFFICULTY_IDS, geometry, generatePuzzle, countSolutions, checkWin, findHint, makeRng };
 });

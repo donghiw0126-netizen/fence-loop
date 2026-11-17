@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 꽉 찬 사각 배경: 안드로이드 maskable 아이콘으로도 쓰기 위해 그림은 가운데 안전 영역 안에 둠 -->
+  <rect width="512" height="512" fill="#0b1220"/>
+  <path d="M136 136H296V216H376V376H216V296H136Z" fill="none" stroke="#ffc66d" stroke-width="18" stroke-linejoin="round" stroke-linecap="round"/>
+  <g fill="#c9d6ea">
+    <circle cx="136" cy="136" r="10"/><circle cx="216" cy="136" r="10"/><circle cx="296" cy="136" r="10"/><circle cx="376" cy="136" r="10"/>
+    <circle cx="136" cy="216" r="10"/><circle cx="216" cy="216" r="10"/><circle cx="296" cy="216" r="10"/><circle cx="376" cy="216" r="10"/>
+    <circle cx="136" cy="296" r="10"/><circle cx="216" cy="296" r="10"/><circle cx="296" cy="296" r="10"/><circle cx="376" cy="296" r="10"/>
+    <circle cx="136" cy="376" r="10"/><circle cx="216" cy="376" r="10"/><circle cx="296" cy="376" r="10"/><circle cx="376" cy="376" r="10"/>
+  </g>
+  <text x="176" y="178" fill="#7fe0a8" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="800" text-anchor="middle" dominant-baseline="central">2</text>
+</svg>
