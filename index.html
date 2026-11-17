@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="점을 이어 고리 하나를 만드는 울타리 잇기(슬리더링크) 퍼즐. 언제든 새 문제를 풀어 보세요." />
+  <title>울타리 잇기 | Fence Loop</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">◇</span> FENCE LOOP</div>
+      <div id="bestLabel" class="date-label"></div>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">울타리 잇기 · 슬리더링크</p>
+      <h1>점을 이어<br><span>울타리 하나를 두르세요.</span></h1>
+      <details class="rules">
+        <summary>규칙 보기</summary>
+        <ol>
+          <li>이웃한 점끼리 선을 이어 <b>끊기지 않는 고리 하나</b>를 만들어요.</li>
+          <li>칸 안의 숫자는 그 칸의 네 변 중 <b>선이 지나가는 변의 개수</b>예요.</li>
+          <li>선은 갈라지거나 서로 엇갈릴 수 없어요. 숫자가 없는 칸은 몇 개든 괜찮아요.</li>
+          <li>점에서 점으로 끌면 선이 그어져요. 선 위에서 끌기 시작하면 지우개가 돼요.</li>
+          <li>점과 점 사이를 누르면 ✕가 생겨요. ✕는 "여기엔 선이 없다"는 메모예요. 한 번 더 누르면 지워져요.</li>
+          <li>정답은 딱 하나뿐이에요.</li>
+        </ol>
+      </details>
+    </section>
+
+    <nav class="difficulty" aria-label="난이도">
+      <button type="button" data-difficulty="easy">쉬움 <small>5×5</small></button>
+      <button type="button" data-difficulty="normal">보통 <small>7×7</small></button>
+      <button type="button" data-difficulty="hard">어려움 <small>10×10</small></button>
+    </nav>
+
+    <section class="play">
+      <div class="status-row">
+        <span id="timer" class="timer" aria-label="풀이 시간">0:00</span>
+        <span id="statusText" class="status-text" aria-live="polite"></span>
+      </div>
+
+      <svg id="board" class="board" tabindex="0" role="application"
+           aria-label="퍼즐 판. 방향키로 이동, 스페이스로 선, X 키로 ✕ 표시"></svg>
+
+      <div class="tools">
+        <button id="undoButton" type="button" class="tool">↩️ 되돌리기</button>
+        <button id="resetButton" type="button" class="tool">🧹 처음부터</button>
+        <button id="newButton" type="button" class="tool">🎲 새 문제</button>
+      </div>
+      <p class="keys-hint">마우스: 점에서 점으로 끌기 = 선 긋기(선 위에서 시작하면 지우기) · 클릭 = ✕/지우기 · 키보드: 방향키 이동 · Space 선 · X ✕ · Ctrl+Z 되돌리기</p>
+    </section>
+
+    <section id="winCard" class="win-card" hidden aria-live="polite">
+      <div class="win-emoji" aria-hidden="true">🎉</div>
+      <h2>울타리 완성!</h2>
+      <p id="winText"></p>
+      <div class="win-actions">
+        <button id="winNewButton" type="button" class="primary">새 문제 풀기</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="./logic.js"></script>
+  <script src="./game.js"></script>
+</body>
+</html>
