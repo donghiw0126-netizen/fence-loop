@@ -1,6 +1,6 @@
 {
   "name": "fence-loop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "언제든 새 문제를 푸는 울타리 잇기(슬리더링크) 웹게임",
   "scripts": {
